@@ -1,19 +1,32 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
+import React, { useCallback } from 'react';
+import cryptoRandomString from "crypto-random-string";
+import crypto from "crypto";
+import base64url from "base64url";
 
-const components: React.FC = () => {
-const {loginWithRedirect, user} = useAuth0();
-const userCache = localStorage.getItem("AuthProver@user");
+const LoginButton: React.FC = () => {
 
-    useEffect(() => {
-        loginWithRedirect();
-        localStorage.setItem("AuthProver@user", JSON.stringify(user));
-    }, [loginWithRedirect, user, userCache])
+  const codeVerifier = useCallback(() => {
+    return cryptoRandomString({length: 80, type: "base64"}) + "-_.~"; 
+  }, [])
+
+
+  const codeChallange = useCallback(() => {
+      const codeVerf = codeVerifier();
+      const codeChall = crypto.createHash('sha256').update(codeVerf).digest();
+      const baseCodeChall = base64url.encode(codeChall);
+      console.log(baseCodeChall);
+  }, [codeVerifier])
 
   return (
-      <div></div>
+      <div>
+          <button onClick={() => codeChallange()}>Login</button>
+      </div>
   );
 }
 
-export default components;
+export default LoginButton;
+
+
+// randomstring.generate(48)
+// return base64.encode(rand) + "-_.~"

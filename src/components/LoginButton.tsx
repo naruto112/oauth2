@@ -26,7 +26,3 @@ const LoginButton: React.FC = () => {
 }
 
 export default LoginButton;
-
-
-// randomstring.generate(48)
-// return base64.encode(rand) + "-_.~"
